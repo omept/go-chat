@@ -13,16 +13,18 @@ import (
 	"github.com/ong-gtp/go-chat/pkg/routes"
 )
 
-func init() {
+func main() {
 	err := godotenv.Load()
 	if err != nil {
 		stdlog.Fatal("Error loading .env file")
 	}
-}
-
-func main() {
 
 	port := os.Getenv("PORT")
+
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		stdlog.Fatal("JWT Secret not set")
+	}
 
 	r := mux.NewRouter()
 	routes.RegisterAuthRoutes(r)
