@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/ong-gtp/go-chat/pkg/config"
 )
 
 var db *gorm.DB
@@ -14,9 +13,9 @@ type User struct {
 }
 
 func init() {
-	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&User{})
+	// config.ConnectDB()
+	// db = config.GetDB()
+	// db.AutoMigrate(&User{})
 }
 
 func (b *User) CreateUser() (*User, *gorm.DB) {
