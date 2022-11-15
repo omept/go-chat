@@ -19,7 +19,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	errors.ErrorCheck(err)
 
 	res, err := authServ.Login(lP.Uname, lP.Password)
-	errors.ErrorCheck(err)
+	if err != nil {
+		utils.ErrResponse(err, w)
+		return
+	}
 
 	res.User.Password = nil
 	data, err := json.Marshal(res)
@@ -34,7 +37,10 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	errors.ErrorCheck(err)
 
 	res, err := authServ.SignUp(lP.Uname, lP.Password)
-	errors.ErrorCheck(err)
+	if err != nil {
+		utils.ErrResponse(err, w)
+		return
+	}
 
 	res.User.Password = nil
 	data, err := json.Marshal(res)

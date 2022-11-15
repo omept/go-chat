@@ -1,13 +1,17 @@
 package errors
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/jinzhu/gorm"
+	// "github.com/ong-gtp/go-chat/pkg/domain/responses"
+)
+
+var (
+	ErrInvalidCredentials = errors.New("invalid login credentials")
 )
 
 func Error(e error) {
-	fmt.Println(e.Error())
 	panic(e)
 }
 
