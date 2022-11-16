@@ -28,6 +28,7 @@ func main() {
 
 	r := mux.NewRouter()
 	routes.RegisterAuthRoutes(r)
+	routes.RegisterWebsocketRoute(r)
 
 	// Logging setup
 	var logger log.Logger
