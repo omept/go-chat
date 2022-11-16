@@ -13,8 +13,8 @@ import (
 )
 
 type AuthService interface {
-	Login(uname, password string) (responses.LoginResponse, error)
-	SignUp(uname, password string) (responses.SignUpResponse, error)
+	Login(userName, password string) (responses.LoginResponse, error)
+	SignUp(userName, password string) (responses.SignUpResponse, error)
 }
 
 type auth struct{}
@@ -40,9 +40,9 @@ func (a *auth) Login(email, password string) (responses.LoginResponse, error) {
 	}
 
 	tk := &models.Token{
-		UserID: user.ID,
-		Uname:  user.Uname,
-		Email:  user.Email,
+		UserID:   user.ID,
+		UserName: user.UserName,
+		Email:    user.Email,
 		StandardClaims: &jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},
@@ -57,7 +57,7 @@ func (a *auth) Login(email, password string) (responses.LoginResponse, error) {
 	return responses.LoginResponse{User: user, JwtToken: tokenString}, nil
 }
 
-func (a *auth) SignUp(email, uname, password string) (responses.SignUpResponse, error) {
+func (a *auth) SignUp(email, userName, password string) (responses.SignUpResponse, error) {
 	var userCheck models.User
 	userCheck.GetUserByEmail(email)
 	if userCheck.ID > 0 {
@@ -75,16 +75,16 @@ func (a *auth) SignUp(email, uname, password string) (responses.SignUpResponse, 
 	user := models.User{
 		Password: hPS,
 		Email:    email,
-		Uname:    uname,
+		UserName: userName,
 	}
 	err3 := user.SaveNew()
 	errors.DBErrorCheck(err3)
 	user.Password = ""
 
 	tk := &models.Token{
-		UserID: user.ID,
-		Uname:  user.Uname,
-		Email:  user.Email,
+		UserID:   user.ID,
+		UserName: user.UserName,
+		Email:    user.Email,
 		StandardClaims: &jwt.StandardClaims{
 			ExpiresAt: expiresAt,
 		},

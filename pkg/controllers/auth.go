@@ -42,7 +42,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := authServ.SignUp(lP.Email, lP.Uname, lP.Password)
+	res, err := authServ.SignUp(lP.Email, lP.UserName, lP.Password)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return

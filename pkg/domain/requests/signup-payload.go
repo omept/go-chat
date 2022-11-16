@@ -1,7 +1,7 @@
 package requests
 
 type SignUpPayload struct {
-	Uname    string `json:"uname"`
+	UserName string `json:"user_name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
