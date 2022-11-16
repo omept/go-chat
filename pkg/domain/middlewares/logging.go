@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"os"
 	"runtime/debug"
 	"time"
 
@@ -43,10 +44,16 @@ func LoggingMiddleware(logger log.Logger) func(http.Handler) http.Handler {
 			defer func() {
 				if err := recover(); err != nil {
 					w.WriteHeader(http.StatusInternalServerError)
-					level.Error(logger).Log(
-						"err", err,
-						"trace", debug.Stack(),
-					)
+					if os.Getenv("LOG_PANIC_TRACE") == "true" {
+						level.Error(logger).Log(
+							"err", err,
+							"trace", debug.Stack(),
+						)
+					} else {
+						level.Error(logger).Log(
+							"err", err,
+						)
+					}
 				}
 			}()
 

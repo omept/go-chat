@@ -3,18 +3,18 @@ package models
 import (
 	"log"
 
-	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"github.com/ong-gtp/go-chat/pkg/config"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB
 
 type User struct {
 	gorm.Model
-	Uname    string  `json:"uname,omitempty"`
-	Email    string  `json:"email,omitempty"`
-	Password *string `json:"password,omitempty"`
+	Uname    string `json:"uname,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 func init() {
@@ -27,8 +27,12 @@ func init() {
 	db.AutoMigrate(&User{})
 }
 
-func GetUserByEmail(email string) (User, *gorm.DB) {
-	var u User
+func (u *User) GetUserByEmail(email string) *gorm.DB {
 	db = db.Where("Email=?", email).Find(&u)
-	return u, db
+	return db
+}
+
+func (u *User) SaveNew() *gorm.DB {
+	db = db.Create(&u)
+	return db
 }

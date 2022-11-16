@@ -34,12 +34,12 @@ func OkEmpty(message string, w http.ResponseWriter) {
 	Ok(res, w)
 }
 
-func DerefString(s *string) string {
-	if s != nil {
-		return *s
-	}
-	return ""
-}
+// func DerefString(s *string) string {
+// 	if s != nil {
+// 		return *s
+// 	}
+// 	return ""
+// }
 
 func ErrResponse(err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -55,6 +55,10 @@ func ErrResponse(err error, w http.ResponseWriter) {
 func codeFrom(err error) int {
 	switch err {
 	case errors.ErrInvalidCredentials:
+		return http.StatusBadRequest
+	case errors.ErrDuplicateEmail:
+		return http.StatusBadRequest
+	case errors.ErrInRequestMarshaling:
 		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError

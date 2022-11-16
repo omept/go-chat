@@ -16,15 +16,18 @@ var authServ = services.NewAuthService()
 func Login(w http.ResponseWriter, r *http.Request) {
 	lP := requests.LoginPayload{}
 	err := utils.ParseBody(r, &lP)
-	errors.ErrorCheck(err)
+	if err != nil {
+		utils.ErrResponse(errors.ErrInRequestMarshaling, w)
+		return
+	}
 
-	res, err := authServ.Login(lP.Uname, lP.Password)
+	res, err := authServ.Login(lP.Email, lP.Password)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return
 	}
 
-	res.User.Password = nil
+	res.User.Password = ""
 	data, err := json.Marshal(res)
 	errors.ErrorCheck(err)
 
@@ -34,15 +37,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	lP := requests.SignUpPayload{}
 	err := utils.ParseBody(r, &lP)
-	errors.ErrorCheck(err)
+	if err != nil {
+		utils.ErrResponse(errors.ErrInRequestMarshaling, w)
+		return
+	}
 
-	res, err := authServ.SignUp(lP.Uname, lP.Password)
+	res, err := authServ.SignUp(lP.Email, lP.Uname, lP.Password)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return
 	}
 
-	res.User.Password = nil
+	res.User.Password = ""
 	data, err := json.Marshal(res)
 	errors.ErrorCheck(err)
 

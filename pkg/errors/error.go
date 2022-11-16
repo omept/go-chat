@@ -3,12 +3,13 @@ package errors
 import (
 	"errors"
 
-	"github.com/jinzhu/gorm"
-	// "github.com/ong-gtp/go-chat/pkg/domain/responses"
+	"gorm.io/gorm"
 )
 
 var (
-	ErrInvalidCredentials = errors.New("invalid login credentials")
+	ErrInvalidCredentials  = errors.New("invalid login credentials")
+	ErrInRequestMarshaling = errors.New("invalid/bad request paramenters")
+	ErrDuplicateEmail      = errors.New("email already exists")
 )
 
 func Error(e error) {

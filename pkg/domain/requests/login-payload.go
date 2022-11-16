@@ -1,6 +1,6 @@
 package requests
 
 type LoginPayload struct {
-	Uname    string `json:"uname"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
