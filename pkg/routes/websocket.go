@@ -15,18 +15,19 @@ var RegisterWebsocketRoute = func(router *mux.Router) {
 
 	sb.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWS(pool, w, r)
-	}).Methods("GET")
+	})
 
 }
 
 func serveWS(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	conn, err := websocket.Upgrade(w, r)
 	errors.ErrorCheck(err)
-	client := websocket.Client{
+
+	client := &websocket.Client{
 		Connection: conn,
 		Pool:       pool,
 	}
 
-	pool.Register <- &client
+	pool.Register <- client
 	client.Read()
 }

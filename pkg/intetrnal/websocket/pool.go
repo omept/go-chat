@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ong-gtp/go-chat/pkg/errors"
+	"github.com/ong-gtp/go-chat/pkg/utils"
 )
 
 type Pool struct {
@@ -23,20 +24,24 @@ func NewPool() *Pool {
 }
 
 func (p *Pool) Start() {
+	defer utils.Revive()
 	for {
 		select {
 		case client := <-p.Register:
 			p.Clients[client] = true
-			log.Println("info", "size of connection pool:", len(p.Clients))
+			log.Println("info:", "New client. Size of connection pool:", len(p.Clients))
 			for c := range p.Clients {
-				log.Println("info", "new client :", c)
-				client.Connection.ReadJSON(Message{Body: "new user joined..."})
+				err := c.Connection.WriteJSON(Message{Type: 1, Body: "new user joined..."})
+				errors.ErrorCheck(err)
 			}
 
 		case client := <-p.Unregister:
 			delete(p.Clients, client)
-			client.Connection.ReadJSON(Message{Body: "user disconnected..."})
-			log.Println("info", "size of connection pool:", len(p.Clients))
+			log.Println("info:", "disconnected a client. size of connection pool:", len(p.Clients))
+			for c := range p.Clients {
+				err := c.Connection.WriteJSON(Message{Type: 1, Body: "user disconnected..."})
+				errors.ErrorCheck(err)
+			}
 
 		case msg := <-p.Broadcast:
 			log.Println("info", "broadcast message to clients in pool")

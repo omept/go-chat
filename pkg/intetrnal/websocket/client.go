@@ -11,12 +11,14 @@ type Client struct {
 	ID         string
 	Connection *websocket.Conn
 	Pool       *Pool
-	// mutex      sync.Mutex
+	Email      string
 }
 
 type Message struct {
-	Type int    `json:"type"`
-	Body string `json:"body"`
+	Type   int    `json:"Type,omitempty"`
+	Body   string `json:"Body,omitempty"`
+	RoomId string `json:"RoomId,omitempty"`
+	Email  string `json:"Email,omitempty"`
 }
 
 func (c *Client) Read() {
@@ -27,11 +29,10 @@ func (c *Client) Read() {
 
 	for {
 		messageType, p, err := c.Connection.ReadMessage()
-		body := string(p)
-
 		errors.ErrorCheck(err)
+		body := string(p)
 		message := Message{Type: messageType, Body: body}
 		c.Pool.Broadcast <- message
-		log.Println("info", "Message received: ", body)
+		log.Println("info:", "Message received: ", body, "messageType: ", messageType)
 	}
 }

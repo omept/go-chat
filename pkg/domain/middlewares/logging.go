@@ -1,6 +1,9 @@
 package middlewares
 
 import (
+	"bufio"
+	"errors"
+	"net"
 	"net/http"
 	"os"
 	"runtime/debug"
@@ -37,13 +40,20 @@ func (rw *responseWriter) WriteHeader(code int) {
 
 }
 
+func (w *responseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	h, ok := w.ResponseWriter.(http.Hijacker)
+	if !ok {
+		return nil, nil, errors.New("hijack not supported")
+	}
+	return h.Hijack()
+}
+
 // LoggingMiddleware logs the incoming HTTP request & its duration.
 func LoggingMiddleware(logger log.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
 				if err := recover(); err != nil {
-					w.WriteHeader(http.StatusInternalServerError)
 					if os.Getenv("LOG_PANIC_TRACE") == "true" {
 						level.Error(logger).Log(
 							"err", err,

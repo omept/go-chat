@@ -37,7 +37,7 @@ func (c *ChatController) ChatRoomMessages(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	res, err := chatServ.ChatRoomMessages()
+	res, err := chatServ.ChatRoomMessages(cmP.RoomId)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return

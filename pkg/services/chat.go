@@ -1,10 +1,13 @@
 package services
 
-import "github.com/ong-gtp/go-chat/pkg/domain/responses"
+import (
+	"github.com/ong-gtp/go-chat/pkg/domain/responses"
+	"github.com/ong-gtp/go-chat/pkg/models"
+)
 
 type ChatService interface {
 	ChatRooms() (responses.ChatRoomsResponse, error)
-	ChatRoomMessages() (responses.ChatRoomMessagesResponse, error)
+	ChatRoomMessages(roomId uint) (responses.ChatRoomMessagesResponse, error)
 }
 
 type chat struct{}
@@ -14,9 +17,9 @@ func NewChatService() *chat {
 }
 
 func (c *chat) ChatRooms() (responses.ChatRoomsResponse, error) {
-	return responses.ChatRoomsResponse{}, nil
+	return responses.ChatRoomsResponse{ChatRooms: []models.ChatRoom{}}, nil
 }
 
-func (c *chat) ChatRoomMessages() (responses.ChatRoomMessagesResponse, error) {
-	return responses.ChatRoomMessagesResponse{}, nil
+func (c *chat) ChatRoomMessages(roomId uint) (responses.ChatRoomMessagesResponse, error) {
+	return responses.ChatRoomMessagesResponse{Chats: []models.Chat{}}, nil
 }
