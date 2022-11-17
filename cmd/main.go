@@ -23,7 +23,7 @@ func main() {
 
 	config.ConnectDB()
 	db := config.GetDB()
-	db.AutoMigrate(&models.User{}, &models.ChartRoom{}, &models.Chart{})
+	db.AutoMigrate(&models.User{}, &models.ChatRoom{}, &models.Chat{})
 
 	port := os.Getenv("PORT")
 

@@ -5,12 +5,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type ChartRoom struct {
+type ChatRoom struct {
 	*gorm.Model
 	Name string `json:"Name"`
 }
 
-func (cr *ChartRoom) Add() *gorm.DB {
+func (cr *ChatRoom) Add() *gorm.DB {
 	db := config.GetDB()
 	db = db.Create(&cr)
 	return db

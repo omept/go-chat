@@ -11,6 +11,8 @@ var RegisterAuthRoutes = func(router *mux.Router) {
 	sb := router.PathPrefix("/v1/api/auth").Subrouter()
 	sb.Use(middlewares.HeaderMiddleware)
 
-	sb.HandleFunc("/login", controllers.Login).Methods("POST")
-	sb.HandleFunc("/signup", controllers.SignUp).Methods("POST")
+	var auth controllers.AuthController
+
+	sb.HandleFunc("/login", auth.Login).Methods("POST")
+	sb.HandleFunc("/signup", auth.SignUp).Methods("POST")
 }
