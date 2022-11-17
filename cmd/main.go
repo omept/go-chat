@@ -9,7 +9,9 @@ import (
 	log "github.com/go-kit/log"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/ong-gtp/go-chat/pkg/config"
 	"github.com/ong-gtp/go-chat/pkg/domain/middlewares"
+	"github.com/ong-gtp/go-chat/pkg/models"
 	"github.com/ong-gtp/go-chat/pkg/routes"
 )
 
@@ -18,6 +20,10 @@ func main() {
 	if err != nil {
 		stdlog.Fatal("Error loading .env file")
 	}
+
+	config.ConnectDB()
+	db := config.GetDB()
+	db.AutoMigrate(&models.User{}, &models.ChartRoom{}, &models.Chart{})
 
 	port := os.Getenv("PORT")
 
