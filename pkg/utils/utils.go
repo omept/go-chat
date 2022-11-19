@@ -12,6 +12,12 @@ import (
 	"github.com/ong-gtp/go-chat/pkg/errors"
 )
 
+type emptyOk struct {
+	Message string
+}
+
+type JWTProps string
+
 func ParseBody(r *http.Request, x interface{}) error {
 	if body, err := io.ReadAll(r.Body); err == nil {
 		if err := json.Unmarshal([]byte(body), x); err != nil {
@@ -24,10 +30,6 @@ func ParseBody(r *http.Request, x interface{}) error {
 func Ok(res []byte, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
-}
-
-type emptyOk struct {
-	Message string
 }
 
 func OkEmpty(message string, w http.ResponseWriter) {
@@ -60,6 +62,8 @@ func codeFrom(err error) int {
 	case errors.ErrInvalidCredentials:
 		return http.StatusBadRequest
 	case errors.ErrDuplicateEmail:
+		return http.StatusBadRequest
+	case errors.ErrInRequestMarshaling:
 		return http.StatusBadRequest
 	case errors.ErrInRequestMarshaling:
 		return http.StatusBadRequest

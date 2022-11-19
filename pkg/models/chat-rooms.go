@@ -12,6 +12,6 @@ type ChatRoom struct {
 
 func (cr *ChatRoom) Add() *gorm.DB {
 	db := config.GetDB()
-	db = db.Create(&cr)
+	db = db.FirstOrCreate(&cr)
 	return db
 }

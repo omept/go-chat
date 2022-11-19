@@ -29,6 +29,26 @@ func (c *ChatController) ChatRooms(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(data, w)
 }
 
+func (c *ChatController) Create(w http.ResponseWriter, r *http.Request) {
+	cP := requests.ChatRoomCreatePayload{}
+	err := utils.ParseBody(r, &cP)
+	if err != nil {
+		utils.ErrResponse(errors.ErrInRequestMarshaling, w)
+		return
+	}
+
+	res, err := chatServ.CreateChatRoom(cP.Name)
+	if err != nil {
+		utils.ErrResponse(err, w)
+		return
+	}
+
+	data, err := json.Marshal(res)
+	errors.ErrorCheck(err)
+
+	utils.Ok(data, w)
+}
+
 func (c *ChatController) ChatRoomMessages(w http.ResponseWriter, r *http.Request) {
 	cmP := requests.ChatRoomMessagesPayload{}
 	err := utils.ParseBody(r, &cmP)
