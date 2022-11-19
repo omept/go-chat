@@ -20,6 +20,7 @@ func Authenticated(next http.Handler) http.Handler {
 		jwtSecret := os.Getenv("JWT_SECRET")
 		if len(authHeader) != 2 {
 			handleAuthenticationErr(w, errors.ErrMalformedToken)
+			return
 		} else {
 			jwtToken := authHeader[1]
 			token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
@@ -31,6 +32,7 @@ func Authenticated(next http.Handler) http.Handler {
 
 			if err != nil {
 				handleAuthenticationErr(w, err)
+				return
 			}
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -41,6 +43,7 @@ func Authenticated(next http.Handler) http.Handler {
 				next.ServeHTTP(w, r.WithContext(ctx))
 			} else {
 				handleAuthenticationErr(w, err)
+				return
 			}
 		}
 	})

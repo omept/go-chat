@@ -19,7 +19,11 @@ func NewChatService() *chat {
 }
 
 func (c *chat) ChatRooms() (responses.ChatRoomsResponse, error) {
-	return responses.ChatRoomsResponse{ChatRooms: []models.ChatRoom{}}, nil
+	var chtList []models.ChatRoom
+	var chtRoomModel models.ChatRoom
+	err := chtRoomModel.List(&chtList)
+	errors.DBErrorCheck(err)
+	return responses.ChatRoomsResponse{ChatRooms: chtList}, nil
 }
 
 func (c *chat) CreateChatRoom(name string) (responses.ChatRoomResponse, error) {

@@ -6,12 +6,19 @@ import (
 )
 
 type ChatRoom struct {
-	*gorm.Model
+	gorm.Model
 	Name string `json:"Name"`
 }
 
 func (cr *ChatRoom) Add() *gorm.DB {
 	db := config.GetDB()
-	db = db.FirstOrCreate(&cr)
+	db = db.Where(cr).FirstOrCreate(&cr)
 	return db
+}
+
+func (cr *ChatRoom) List(cht *[]ChatRoom) *gorm.DB {
+	db := config.GetDB()
+	db = db.Order("id DESC").Find(&cht)
+	return db
+
 }

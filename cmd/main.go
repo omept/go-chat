@@ -52,7 +52,8 @@ func main() {
 
 	// http.Handle("/", r)
 	logger.Log("Starting", true, "port", port)
-	handler := cors.Default().Handler(loggedRoutes)
+	allowedHeaders := []string{"Authorization", "Content-Type"}
+	handler := cors.New(cors.Options{Debug: true, AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
 	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
 
 }
