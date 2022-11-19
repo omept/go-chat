@@ -13,6 +13,7 @@ import (
 	"github.com/ong-gtp/go-chat/pkg/domain/middlewares"
 	"github.com/ong-gtp/go-chat/pkg/models"
 	"github.com/ong-gtp/go-chat/pkg/routes"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -49,8 +50,9 @@ func main() {
 	loggingMiddleware := middlewares.LoggingMiddleware(logger)
 	loggedRoutes := loggingMiddleware(r)
 
-	http.Handle("/", r)
+	// http.Handle("/", r)
 	logger.Log("Starting", true, "port", port)
-	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), loggedRoutes))
+	handler := cors.Default().Handler(loggedRoutes)
+	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
 
 }
