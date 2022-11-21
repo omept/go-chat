@@ -2,7 +2,6 @@ package rabbitmq
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"os"
 	"time"
@@ -121,13 +120,13 @@ func messageTransformer(entries <-chan amqp.Delivery, receivedMessages chan Stoc
 // processResponse sends the stock response to the websocket's connection pool
 func processResponse(s <-chan StockResponse, b *Broker, pool *websocket.Pool) {
 	for r := range s {
-		log.Println("processing stock request for ", r.RoomId)
-		body, err := json.Marshal(r)
-		errors.ErrorCheck(err)
+		log.Println("processing stock response for ", r.RoomId)
+		// body, err := json.Marshal(r)
+		// errors.ErrorCheck(err)
 
 		sr := StockResponse{
 			RoomId:  r.RoomId,
-			Message: string(body),
+			Message: r.Message,
 		}
 
 		message := websocket.Message{Type: 1, Body: websocket.Body{ChatRoomId: int32(sr.RoomId), ChatUser: "stock-bot", ChatMessage: sr.Message}}
