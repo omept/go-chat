@@ -11,6 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ong-gtp/go-chat/pkg/domain/responses"
 	"github.com/ong-gtp/go-chat/pkg/errors"
+	"github.com/ong-gtp/go-chat/pkg/intetrnal/rabbitmq"
 	"github.com/ong-gtp/go-chat/pkg/intetrnal/websocket"
 )
 
@@ -47,9 +48,8 @@ var RegisterWebsocketRoute = func(router *mux.Router) {
 func serveWS(pool *websocket.Pool, w http.ResponseWriter, r *http.Request, claims jwt.MapClaims) {
 	conn, err := websocket.Upgrade(w, r)
 	errors.ErrorCheck(err)
-	log.Println(claims["Email"])
-	// Access context values in handlers like this
-	// props, _ := r.Context().Value(props).(jwt.MapClaims)
+	br := rabbitmq.GetRabbitMQBroker()
+
 	client := &websocket.Client{
 		Connection: conn,
 		Pool:       pool,
@@ -57,7 +57,10 @@ func serveWS(pool *websocket.Pool, w http.ResponseWriter, r *http.Request, claim
 	}
 
 	pool.Register <- client
-	client.Read()
+	requestBody := make(chan []byte) // websocket.Message byte array channel
+	go client.Read(requestBody)
+	go br.ReadMessages(pool)
+	go br.PublishMessage(requestBody)
 }
 
 func handleWebsocketAuthenticationErr(w http.ResponseWriter, err error) {

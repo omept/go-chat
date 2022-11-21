@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/ong-gtp/go-chat/pkg/config"
 	"github.com/ong-gtp/go-chat/pkg/domain/middlewares"
+	"github.com/ong-gtp/go-chat/pkg/intetrnal/rabbitmq"
 	"github.com/ong-gtp/go-chat/pkg/models"
 	"github.com/ong-gtp/go-chat/pkg/routes"
 	"github.com/rs/cors"
@@ -26,6 +27,9 @@ func main() {
 	db := config.GetDB()
 	db.AutoMigrate(&models.User{}, &models.ChatRoom{}, &models.Chat{})
 
+	conn, ch := rabbitmq.InitilizeBroker()
+	defer conn.Close()
+	defer ch.Close()
 	port := os.Getenv("PORT")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -50,7 +54,7 @@ func main() {
 	loggingMiddleware := middlewares.LoggingMiddleware(logger)
 	loggedRoutes := loggingMiddleware(r)
 
-	logger.Log("Starting", true, "port", port)
+	logger.Log("Server", "starting", "port", port)
 	handler := corsSetup(loggedRoutes)
 	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
 

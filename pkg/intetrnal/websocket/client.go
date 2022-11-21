@@ -3,6 +3,7 @@ package websocket
 import (
 	"encoding/json"
 	"log"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"github.com/ong-gtp/go-chat/pkg/errors"
@@ -26,11 +27,12 @@ type Body struct {
 	ChatUser     string `json:"chatUser,omitempty"`
 }
 
-func (c *Client) Read() {
+func (c *Client) Read(bodyChan chan []byte) {
 	defer func() {
 		c.Pool.Unregister <- c
 		c.Connection.Close()
 	}()
+	defer c.Pool.ReviveWebsocket()
 
 	for {
 		messageType, p, err := c.Connection.ReadMessage()
@@ -42,5 +44,9 @@ func (c *Client) Read() {
 		message := Message{Type: messageType, Body: body}
 		c.Pool.Broadcast <- message
 		log.Println("info:", "Message received: ", body, "messageType: ", messageType)
+
+		if strings.Index(body.ChatMessage, "/stock=") == 0 {
+			bodyChan <- p
+		}
 	}
 }
