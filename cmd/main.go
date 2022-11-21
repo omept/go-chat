@@ -50,10 +50,18 @@ func main() {
 	loggingMiddleware := middlewares.LoggingMiddleware(logger)
 	loggedRoutes := loggingMiddleware(r)
 
-	// http.Handle("/", r)
 	logger.Log("Starting", true, "port", port)
-	allowedHeaders := []string{"Authorization", "Content-Type"}
-	handler := cors.New(cors.Options{Debug: true, AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
+	handler := corsSetup(loggedRoutes)
 	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
+
+}
+
+func corsSetup(loggedRoutes http.Handler) http.Handler {
+	allowedHeaders := []string{"Authorization", "Content-Type"}
+	corsDebug := os.Getenv("CORS_DEBUG")
+	if corsDebug == "true" {
+		return cors.New(cors.Options{Debug: true, AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
+	}
+	return cors.New(cors.Options{AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
 
 }

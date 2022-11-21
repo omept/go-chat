@@ -3,10 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
-	"os"
-	"runtime/debug"
 
 	"github.com/ong-gtp/go-chat/pkg/domain/responses"
 	"github.com/ong-gtp/go-chat/pkg/errors"
@@ -69,22 +66,5 @@ func codeFrom(err error) int {
 		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
-	}
-}
-
-func Revive() {
-	if err := recover(); err != nil {
-		if os.Getenv("LOG_PANIC_TRACE") == "true" {
-			log.Println(
-				"level:", "error",
-				"err: ", err,
-				"trace", string(debug.Stack()),
-			)
-		} else {
-			log.Println(
-				"level", "error",
-				"err", err,
-			)
-		}
 	}
 }

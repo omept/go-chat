@@ -2,9 +2,10 @@ package websocket
 
 import (
 	"log"
+	"os"
+	"runtime/debug"
 
 	"github.com/ong-gtp/go-chat/pkg/errors"
-	"github.com/ong-gtp/go-chat/pkg/utils"
 )
 
 type Pool struct {
@@ -24,14 +25,14 @@ func NewPool() *Pool {
 }
 
 func (p *Pool) Start() {
-	defer utils.Revive()
+	defer p.ReviveWebsocket()
 	for {
 		select {
 		case client := <-p.Register:
 			p.Clients[client] = true
 			log.Println("info:", "New client. Size of connection pool:", len(p.Clients))
 			for c := range p.Clients {
-				err := c.Connection.WriteJSON(Message{Type: 1, Body: "new user joined..."})
+				err := c.Connection.WriteJSON(Message{Type: 1, Body: Body{ChatMessage: "new user joined..."}})
 				errors.ErrorCheck(err)
 			}
 
@@ -39,7 +40,8 @@ func (p *Pool) Start() {
 			delete(p.Clients, client)
 			log.Println("info:", "disconnected a client. size of connection pool:", len(p.Clients))
 			for c := range p.Clients {
-				err := c.Connection.WriteJSON(Message{Type: 1, Body: "user disconnected..."})
+
+				err := c.Connection.WriteJSON(Message{Type: 1, Body: Body{ChatMessage: "user disconnected..."}})
 				errors.ErrorCheck(err)
 			}
 
@@ -50,5 +52,23 @@ func (p *Pool) Start() {
 				errors.ErrorCheck(err)
 			}
 		}
+	}
+}
+
+func (p *Pool) ReviveWebsocket() {
+	if err := recover(); err != nil {
+		if os.Getenv("LOG_PANIC_TRACE") == "true" {
+			log.Println(
+				"level:", "error",
+				"err: ", err,
+				"trace", string(debug.Stack()),
+			)
+		} else {
+			log.Println(
+				"level", "error",
+				"err", err,
+			)
+		}
+		go p.Start()
 	}
 }
