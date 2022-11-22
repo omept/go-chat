@@ -13,6 +13,7 @@ require (
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	gorm.io/driver/mysql v1.4.4
 	gorm.io/gorm v1.24.1
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
