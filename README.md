@@ -23,6 +23,10 @@ I use the poly repo ideology, hence, the project works in collaboration with two
 
 <br />
 
+This service reads publishes stock bot requests to env.STKBT_RECEIVER_QUEUE queue on RabbitMQ and reads the processed stock response on env.STKBT_PUBLISHER_QUEUE queue on RabbitMQ.
+
+<br />
+
 ## <u>Starting The App</u>
 
 <br />
