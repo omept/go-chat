@@ -54,6 +54,7 @@ func serveWS(pool *websocket.Pool, w http.ResponseWriter, r *http.Request, claim
 		Connection: conn,
 		Pool:       pool,
 		Email:      claims["Email"].(string),
+		UserID:     uint(claims["UserID"].(float64)),
 	}
 
 	pool.Register <- client

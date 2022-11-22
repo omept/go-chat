@@ -120,7 +120,7 @@ func messageTransformer(entries <-chan amqp.Delivery, receivedMessages chan Stoc
 // processResponse sends the stock response to the websocket's connection pool
 func processResponse(s <-chan StockResponse, b *Broker, pool *websocket.Pool) {
 	for r := range s {
-		log.Println("processing stock response for ", r.RoomId)
+		log.Println("processing stock response for ", r.Message)
 		// body, err := json.Marshal(r)
 		// errors.ErrorCheck(err)
 
@@ -131,6 +131,6 @@ func processResponse(s <-chan StockResponse, b *Broker, pool *websocket.Pool) {
 
 		message := websocket.Message{Type: 1, Body: websocket.Body{ChatRoomId: int32(sr.RoomId), ChatUser: "stock-bot", ChatMessage: sr.Message}}
 		pool.Broadcast <- message
-		log.Println("processed", sr)
+		log.Println("processed", sr.Message)
 	}
 }

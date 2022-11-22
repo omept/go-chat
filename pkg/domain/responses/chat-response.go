@@ -9,6 +9,13 @@ type ChatRoomResponse struct {
 	ChatRoom models.ChatRoom `json:"ChatRoom"`
 }
 
+type ChatMessage struct {
+	ChatMessage  string `json:"chatMessage"`
+	ChatUser     string `json:"chatUser"`
+	ChatRoomId   uint   `json:"chatRoomId"`
+	ChatRoomName string `json:"chatRoomName"`
+}
+
 type ChatRoomMessagesResponse struct {
-	Chats []models.Chat `json:"Chats"`
+	Chats []ChatMessage `json:"Chats"`
 }

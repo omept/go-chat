@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/ong-gtp/go-chat/pkg/errors"
+	"github.com/ong-gtp/go-chat/pkg/services"
 )
 
 type Client struct {
@@ -14,6 +15,7 @@ type Client struct {
 	Connection *websocket.Conn
 	Pool       *Pool
 	Email      string
+	UserID     uint
 }
 
 type Message struct {
@@ -47,6 +49,9 @@ func (c *Client) Read(bodyChan chan []byte) {
 
 		if strings.Index(body.ChatMessage, "/stock=") == 0 {
 			bodyChan <- p
+		} else {
+			var chatServ = services.NewChatService()
+			go chatServ.SaveChatMessage(body.ChatMessage, uint(body.ChatRoomId), c.UserID)
 		}
 	}
 }
