@@ -3,11 +3,21 @@ package utils
 import (
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 
+	"github.com/joho/godotenv"
+	"github.com/ong-gtp/go-chat/pkg/config"
 	"github.com/ong-gtp/go-chat/pkg/domain/responses"
 	"github.com/ong-gtp/go-chat/pkg/errors"
+	"github.com/ong-gtp/go-chat/pkg/models"
 )
+
+type emptyOk struct {
+	Message string
+}
+
+type JWTProps string
 
 func ParseBody(r *http.Request, x interface{}) error {
 	if body, err := io.ReadAll(r.Body); err == nil {
@@ -21,10 +31,6 @@ func ParseBody(r *http.Request, x interface{}) error {
 func Ok(res []byte, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
-}
-
-type emptyOk struct {
-	Message string
 }
 
 func OkEmpty(message string, w http.ResponseWriter) {
@@ -60,7 +66,26 @@ func codeFrom(err error) int {
 		return http.StatusBadRequest
 	case errors.ErrInRequestMarshaling:
 		return http.StatusBadRequest
+	case errors.ErrInRequestMarshaling:
+		return http.StatusBadRequest
 	default:
 		return http.StatusInternalServerError
 	}
+}
+
+func ParseByteArray(r []byte, x interface{}) error {
+	if err := json.Unmarshal(r, x); err != nil {
+		return err
+	}
+	return nil
+}
+
+func TestHelper() {
+	err := godotenv.Load("../../.env.testing")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	config.ConnectDB()
+	db := config.GetDB()
+	db.AutoMigrate(&models.User{}, &models.ChatRoom{}, &models.Chat{})
 }
