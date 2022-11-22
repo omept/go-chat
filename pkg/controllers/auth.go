@@ -11,9 +11,11 @@ import (
 	"github.com/ong-gtp/go-chat/pkg/utils"
 )
 
+type AuthController struct{}
+
 var authServ = services.NewAuthService()
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func (a *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 	lP := requests.LoginPayload{}
 	err := utils.ParseBody(r, &lP)
 	if err != nil {
@@ -34,7 +36,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	utils.Ok(data, w)
 }
 
-func SignUp(w http.ResponseWriter, r *http.Request) {
+func (a *AuthController) SignUp(w http.ResponseWriter, r *http.Request) {
 	lP := requests.SignUpPayload{}
 	err := utils.ParseBody(r, &lP)
 	if err != nil {

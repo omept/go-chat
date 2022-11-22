@@ -9,8 +9,12 @@ import (
 	log "github.com/go-kit/log"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/ong-gtp/go-chat/pkg/config"
 	"github.com/ong-gtp/go-chat/pkg/domain/middlewares"
+	"github.com/ong-gtp/go-chat/pkg/intetrnal/rabbitmq"
+	"github.com/ong-gtp/go-chat/pkg/models"
 	"github.com/ong-gtp/go-chat/pkg/routes"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -19,6 +23,13 @@ func main() {
 		stdlog.Fatal("Error loading .env file")
 	}
 
+	config.ConnectDB()
+	db := config.GetDB()
+	db.AutoMigrate(&models.User{}, &models.ChatRoom{}, &models.Chat{})
+
+	conn, ch := rabbitmq.InitilizeBroker()
+	defer conn.Close()
+	defer ch.Close()
 	port := os.Getenv("PORT")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -28,6 +39,8 @@ func main() {
 
 	r := mux.NewRouter()
 	routes.RegisterAuthRoutes(r)
+	routes.RegisterChatRoutes(r)
+	routes.RegisterWebsocketRoute(r)
 
 	// Logging setup
 	var logger log.Logger
@@ -41,8 +54,18 @@ func main() {
 	loggingMiddleware := middlewares.LoggingMiddleware(logger)
 	loggedRoutes := loggingMiddleware(r)
 
-	http.Handle("/", r)
-	logger.Log("Starting", true, "port", port)
-	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), loggedRoutes))
+	logger.Log("Server", "starting", "port", port)
+	handler := corsSetup(loggedRoutes)
+	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
+
+}
+
+func corsSetup(loggedRoutes http.Handler) http.Handler {
+	allowedHeaders := []string{"Authorization", "Content-Type"}
+	corsDebug := os.Getenv("CORS_DEBUG")
+	if corsDebug == "true" {
+		return cors.New(cors.Options{Debug: true, AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
+	}
+	return cors.New(cors.Options{AllowedHeaders: allowedHeaders}).Handler(loggedRoutes)
 
 }

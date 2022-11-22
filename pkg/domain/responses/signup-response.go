@@ -3,6 +3,6 @@ package responses
 import "github.com/ong-gtp/go-chat/pkg/models"
 
 type SignUpResponse struct {
-	User     models.User `json:"user"`
-	JwtToken string      `json:"token"`
+	User     models.User `json:"User"`
+	JwtToken string      `json:"Token"`
 }
