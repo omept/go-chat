@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ong-gtp/go-chat/pkg/controllers"
 	"github.com/ong-gtp/go-chat/pkg/domain/middlewares"
+	"github.com/ong-gtp/go-chat/pkg/services"
 )
 
 var RegisterAuthRoutes = func(router *mux.Router) {
@@ -12,6 +13,7 @@ var RegisterAuthRoutes = func(router *mux.Router) {
 	sb.Use(middlewares.HeaderMiddleware)
 
 	var auth controllers.AuthController
+	auth.RegisterService(services.NewAuthService())
 
 	sb.HandleFunc("/login", auth.Login).Methods("POST")
 	sb.HandleFunc("/signup", auth.SignUp).Methods("POST")
