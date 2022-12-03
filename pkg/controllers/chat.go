@@ -11,13 +11,17 @@ import (
 	"github.com/ong-gtp/go-chat/pkg/utils"
 )
 
-type ChatController struct{}
+type ChatController struct {
+	chatService services.ChatService
+}
 
-var chatServ = services.NewChatService()
+func (c *ChatController) RegisterService(s services.ChatService) {
+	c.chatService = s
+}
 
 func (c *ChatController) ChatRooms(w http.ResponseWriter, r *http.Request) {
 
-	res, err := chatServ.ChatRooms()
+	res, err := c.chatService.ChatRooms()
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return
@@ -37,7 +41,7 @@ func (c *ChatController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := chatServ.CreateChatRoom(cP.Name)
+	res, err := c.chatService.CreateChatRoom(cP.Name)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return
@@ -57,7 +61,7 @@ func (c *ChatController) ChatRoomMessages(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	res, err := chatServ.ChatRoomMessages(cmP.RoomId)
+	res, err := c.chatService.ChatRoomMessages(cmP.RoomId)
 	if err != nil {
 		utils.ErrResponse(err, w)
 		return

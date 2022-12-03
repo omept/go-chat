@@ -10,7 +10,7 @@ import (
 
 type ChatService interface {
 	CreateChatRoom(name string) (responses.ChatRoomResponse, error)
-	SaveChatMessage(msg string, roomId uint) bool
+	SaveChatMessage(msg string, roomId, userId uint) bool
 	ChatRooms() (responses.ChatRoomsResponse, error)
 	ChatRoomMessages(roomId uint) (responses.ChatRoomMessagesResponse, error)
 }
