@@ -50,8 +50,8 @@ func (c *Client) Read(bodyChan chan []byte) {
 		if strings.Index(body.ChatMessage, "/stock=") == 0 {
 			bodyChan <- p
 		} else {
-			var chatServ = services.NewChatService()
-			go chatServ.SaveChatMessage(body.ChatMessage, uint(body.ChatRoomId), c.UserID)
+			var chatSaver services.ChatSaver = services.NewChatService()
+			go chatSaver.SaveChatMessage(body.ChatMessage, uint(body.ChatRoomId), c.UserID)
 		}
 	}
 }

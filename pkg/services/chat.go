@@ -10,9 +10,12 @@ import (
 
 type ChatService interface {
 	CreateChatRoom(name string) (responses.ChatRoomResponse, error)
-	SaveChatMessage(msg string, roomId uint) bool
 	ChatRooms() (responses.ChatRoomsResponse, error)
 	ChatRoomMessages(roomId uint) (responses.ChatRoomMessagesResponse, error)
+}
+
+type ChatSaver interface {
+	SaveChatMessage(msg string, roomId, userId uint) bool
 }
 
 type chat struct{}

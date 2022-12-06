@@ -14,7 +14,7 @@ import (
 
 type AuthService interface {
 	Login(userName, password string) (responses.LoginResponse, error)
-	SignUp(userName, password string) (responses.SignUpResponse, error)
+	SignUp(email, userName, password string) (responses.SignUpResponse, error)
 }
 
 type auth struct{}
