@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/ong-gtp/go-chat/pkg/errors"
-	"github.com/ong-gtp/go-chat/pkg/intetrnal/websocket"
 	"github.com/ong-gtp/go-chat/pkg/utils"
+	"github.com/ong-gtp/go-chat/pkg/websocket"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 

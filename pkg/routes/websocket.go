@@ -11,8 +11,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ong-gtp/go-chat/pkg/domain/responses"
 	"github.com/ong-gtp/go-chat/pkg/errors"
-	"github.com/ong-gtp/go-chat/pkg/intetrnal/rabbitmq"
-	"github.com/ong-gtp/go-chat/pkg/intetrnal/websocket"
+	"github.com/ong-gtp/go-chat/pkg/rabbitmq"
+	"github.com/ong-gtp/go-chat/pkg/websocket"
 )
 
 var RegisterWebsocketRoute = func(router *mux.Router) {
