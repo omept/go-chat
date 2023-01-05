@@ -1,17 +1,18 @@
 package rabbitmq
 
 import (
-	"log"
 	"os"
 
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
 	"github.com/ong-gtp/go-chat/pkg/errors"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 var br Broker
 
-func InitilizeBroker() (*amqp.Connection, *amqp.Channel) {
-	log.Println("RabbitMQ connecting")
+func InitilizeBroker(logger log.Logger) (*amqp.Connection, *amqp.Channel) {
+	level.Info(logger).Log("RabbitMQ ", "connecting")
 
 	rmqHost := os.Getenv("RMQ_HOST")
 	rmqUserName := os.Getenv("RMQ_USERNAME")
@@ -26,7 +27,7 @@ func InitilizeBroker() (*amqp.Connection, *amqp.Channel) {
 	errors.ErrorCheck(err)
 
 	br.SetUp(ch)
-	log.Println("RabbitMQ connected")
+	level.Info(logger).Log("RabbitMQ ", "connected")
 	return conn, ch
 }
 
