@@ -5,8 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// var db *gorm.DB
-
 type User struct {
 	gorm.Model
 	UserName string `json:"UserName,omitempty"`
