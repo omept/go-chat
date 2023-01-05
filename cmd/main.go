@@ -22,7 +22,7 @@ func main() {
 	// Load env values
 	err := godotenv.Load()
 	if err != nil {
-		stdlog.Fatal("Error loading .env file")
+		stdlog.Panic("Error loading .env file")
 	}
 
 	// Logging setup
@@ -31,7 +31,7 @@ func main() {
 	if fileLogging == "true" {
 		file, err := os.Create(fmt.Sprintf("./applog-%s.txt", time.Now().Format(time.RFC3339Nano)))
 		if err != nil {
-			stdlog.Fatal("Could not create log file: ", err)
+			stdlog.Panic("Could not create log file: ", err)
 		}
 		defer file.Close()
 
@@ -60,7 +60,7 @@ func main() {
 	// JWT_SECRET must be set for Auth signing
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
-		stdlog.Fatal("JWT Secret not set")
+		stdlog.Panic("JWT Secret not set")
 	}
 
 	// Setup app routes
