@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	stdlog "log"
 	"net/http"
@@ -19,10 +20,18 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	// Load env values
 	err := godotenv.Load()
 	if err != nil {
-		stdlog.Panic("Error loading .env file")
+		stdlog.Println("Error loading .env file")
+		return err
 	}
 
 	// Logging setup
@@ -31,7 +40,8 @@ func main() {
 	if fileLogging == "true" {
 		file, err := os.Create(fmt.Sprintf("./applog-%s.txt", time.Now().Format(time.RFC3339Nano)))
 		if err != nil {
-			stdlog.Panic("Could not create log file: ", err)
+			stdlog.Println("Could not create log file: ", err)
+			return err
 		}
 		defer file.Close()
 
@@ -60,7 +70,8 @@ func main() {
 	// JWT_SECRET must be set for Auth signing
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
-		stdlog.Panic("JWT Secret not set")
+		stdlog.Println("JWT Secret not set")
+		return errors.New("JWT Secret not set")
 	}
 
 	// Setup app routes
@@ -77,5 +88,6 @@ func main() {
 	// Start api server
 	port := os.Getenv("PORT")
 	level.Info(logger).Log("Server", "starting", "port", port)
-	stdlog.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handler))
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), handler)
+	return err
 }
