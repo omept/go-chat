@@ -8,7 +8,7 @@ import (
 	"github.com/ong-gtp/go-chat/utils/errors"
 )
 
-type ChatService interface {
+type Chat interface {
 	CreateChatRoom(name string) (responses.ChatRoomResponse, error)
 	ChatRooms() (responses.ChatRoomsResponse, error)
 	ChatRoomMessages(roomId uint) (responses.ChatRoomMessagesResponse, error)

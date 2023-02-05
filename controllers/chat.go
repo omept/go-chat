@@ -12,10 +12,10 @@ import (
 )
 
 type ChatController struct {
-	chatService services.ChatService
+	chatService services.Chat
 }
 
-func (c *ChatController) RegisterService(s services.ChatService) {
+func (c *ChatController) RegisterService(s services.Chat) {
 	c.chatService = s
 }
 

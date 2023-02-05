@@ -12,10 +12,10 @@ import (
 )
 
 type AuthController struct {
-	authServ services.AuthService
+	authServ services.Auth
 }
 
-func (a *AuthController) RegisterService(s services.AuthService) {
+func (a *AuthController) RegisterService(s services.Auth) {
 	a.authServ = s
 }
 

@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthService interface {
+type Auth interface {
 	Login(userName, password string) (responses.LoginResponse, error)
 	SignUp(email, userName, password string) (responses.SignUpResponse, error)
 }
