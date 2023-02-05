@@ -71,7 +71,7 @@ The table below describes the endpoints available on the app:
 
 ## App tests
 Run the command below to execute tests
-### `go test github.com/ong-gtp/go-chat/pkg/services`
+### `go test github.com/ong-gtp/go-chat/services`
 
 
 ## Useful Links
