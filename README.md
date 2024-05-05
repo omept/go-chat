@@ -15,11 +15,11 @@ The following tools are required to run the project
 I use the poly repo ideology, hence, the project works in collaboration with two other repositories:
 
 - go-stockbot : A decoupled service that calls an API using a "stock_code" as a parameter (<a href="​https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv">​https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv</a>​, here ​aapl.us is the stock_code​) and recieves a csv file. The  bot parses the received CSV file and then sends a message to the chatroom service using a message broker (RabbitMQ).  
-  <b>Repo Link : https://github.com/ong-gtp/go-stockbot-rabbitmq.git</b>
+  <b>Repo Link : https://github.com/omept/go-stockbot-rabbitmq.git</b>
 
 
 - React client app : The frontend application that allows registered users to log in and talk with other users in a chatroom. It also allows users to post messages as commands into a chatroom with the following format `/stock=stock_code` <br />
-  <b>Repo Link : https://github.com/ong-gtp/go-chat-react.git</b>
+  <b>Repo Link : https://github.com/omept/go-chat-react.git</b>
 
 <br />
 
@@ -45,12 +45,12 @@ RabbitMQ is the message broker between the bot service and the chat service. To 
 <br />
 
 ## Step 4 : Start Bot service app
-### visit this repo: `https://github.com/ong-gtp/go-stockbot-rabbitmq.git` on steps for stating the app
+### visit this repo: `https://github.com/omept/go-stockbot-rabbitmq.git` on steps for stating the app
 
 <br />
 
 ## Step 5 : Start React frontend app
-### visit this repo `https://github.com/ong-gtp/go-chat-react.git` on steps for stating the react frontend app
+### visit this repo `https://github.com/omept/go-chat-react.git` on steps for stating the react frontend app
 
 <br />
 
@@ -71,7 +71,7 @@ The table below describes the endpoints available on the app:
 
 ## App tests
 Run the command below to execute tests
-### `go test github.com/ong-gtp/go-chat/services`
+### `go test github.com/omept/go-chat/services`
 
 
 ## Useful Links
